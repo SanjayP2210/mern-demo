@@ -1,0 +1,45 @@
+.container {
+  max-width: 140rem;
+  padding: 4.2rem 2.4rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+ul {
+  display: flex;
+  gap: 3.2rem;
+}
+ul li a{
+  position: relative;
+}
+ul li a:before,
+ul li a:after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -2px;
+  background: #fff;
+}
+
+ul li a:before {
+  left: 0;
+}
+
+ul li a:after {
+  right: 0;
+  background: #fff;
+  transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+ul li a.active:before {
+  background: #fff;
+  width: 100%;
+  transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+ul li a.active:after {
+  background: transparent;
+  width: 100%;
+  transition: 0s;
+}
