@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 import jwt from 'jsonwebtoken';
 import bcrypt from "bcryptjs";
+import { Schema } from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    image: String,
     userName: {
         type: String,
         required: [true, 'user name required'],
@@ -36,7 +38,8 @@ const userSchema = new mongoose.Schema({
     isAdmin: {
         type: Boolean,
         default: false
-    }
+    },
+    technology: { type: [Schema.Types.ObjectId], ref: 'technology', required: true },
 })
 
 userSchema.pre("save", async function (next) {

@@ -16,7 +16,7 @@ export const addUser = createAsyncThunk('users/addUser', async (newUser) => {
 });
 
 export const updateUser = createAsyncThunk('users/updateUser', async (updatedUser) => {
-    return await apiService.patchRequest(`user/${updatedUser._id}`, updateUser);
+    return await apiService.patchRequest(`user/${updatedUser?.userId}`, updatedUser.formData);
 });
 
 export const removeUser = createAsyncThunk('users/removeUser', async (userId) => {
@@ -114,12 +114,14 @@ const userReducer = createSlice({
     }, extraReducers: (builder) => {
         builder
             .addCase(fetchUsers.pending, (state) => {
+                state.isUserUpdated = false;
                 state.loading = true;
                 state.error = null;
                 state.status = 'loading';
 
             })
             .addCase(fetchUsers.fulfilled, (state, action) => {
+                state.isUserUpdated = false;
                 state.loading = false;
                 state.status = 'succeeded';
                 state.users = action.payload.users;
@@ -158,12 +160,11 @@ const userReducer = createSlice({
                 const data = action.payload;
                 state.loading = false;
                 state.status = 'succeeded';
-                if (data.isError) return toast.error(data.message);
-
-                toast.success(data.message);
-                state.users.push(data.user);
-                state.isUserAdded = true;
-
+                if (!data.isError) {
+                    toast.success(data.message);
+                    state.users.push(data.user);
+                    state.isUserAdded = true;
+                }
             })
             .addCase(addUser.rejected, (state, action) => {
                 state.loading = false;
@@ -182,13 +183,11 @@ const userReducer = createSlice({
                 const data = action.payload;
                 state.loading = false;
                 state.status = 'succeeded';
-                if (data.isError) return toast.error(data.message);
-
-                toast.success(data.message);
-                state.loading = false;
-                state.status = 'succeeded';
-                state.isUserUpdated = true;
-
+                if (!data.isError) {
+                    state.loading = false;
+                    state.status = 'succeeded';
+                    state.isUserUpdated = true;
+                }
             })
             .addCase(updateUser.rejected, (state, action) => {
                 state.loading = false;
@@ -207,11 +206,10 @@ const userReducer = createSlice({
                 const data = action.payload;
                 state.loading = false;
                 state.status = 'succeeded';
-                if (data.isError) return toast.error(data.message);
-
-                toast.success(data.message);
-                state.isUserDeleted = true;
-
+                if (!data.isError) {
+                    toast.success(data.message);
+                    state.isUserDeleted = true;
+                }
             })
             .addCase(removeUser.rejected, (state, action) => {
                 state.loading = false;

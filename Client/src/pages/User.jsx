@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers, removeUser } from "../reducers/userReducer";
 // import Loader from "../components/Loader/Loader";
 import Loader from "../components/Loader/Loader";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 export const User = () => {
   const [userList, setUserList] = useState([]);
@@ -55,6 +56,7 @@ export const User = () => {
                   <th>Name</th>
                   <th>Email</th>
                   <th>Mobile Number</th>
+                  <th>Role</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -65,6 +67,7 @@ export const User = () => {
                       <td>{data?.userName}</td>
                       <td>{data?.email}</td>
                       <td>{data?.mobileNumber}</td>
+                      <td>{data?.isAdmin ? "Admin" : "User"}</td>
                       <td>
                         <button
                           style={{ marginRight: "10px" }}
@@ -73,7 +76,7 @@ export const User = () => {
                             navigate(`/admin/user/${data._id}/edit`);
                           }}
                         >
-                          Edit
+                          <FaEdit />
                         </button>
                         <button
                           className="btn btn-danger"
@@ -82,7 +85,7 @@ export const User = () => {
                             dispatch(removeUser(data?._id));
                           }}
                         >
-                          Delete
+                          <FaTrash />
                         </button>
                       </td>
                     </tr>

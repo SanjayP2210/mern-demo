@@ -9,7 +9,7 @@ const defaultContactFormData = {
   message: "",
 };
 
-export const Contact = () => {
+export const AdminContact = () => {
   const [contact, setContact] = useState(defaultContactFormData);
   const dispatch = useDispatch();
   const { loginUserData } = useSelector((state) => state.login);

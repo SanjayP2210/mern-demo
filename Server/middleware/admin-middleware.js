@@ -1,7 +1,7 @@
 export const adminMiddleware = async (req, res, next) => {
   try {
     // console.log(req.user);
-    const adminRole = req.user?.isAdmin;
+    const adminRole = req?.user?.isAdmin || req?.isOwnUser;
     if (!adminRole) {
       return res
         .status(403)

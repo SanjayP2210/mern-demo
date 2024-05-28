@@ -1,10 +1,8 @@
 import { toast } from "react-toastify";
-import { getJWTToken } from "../constants/utilities";
-import { setLoadingState } from "../reducers/authReducer";
+import { LogoutUser, getJWTToken } from "../constants/utilities";
 
 export let BASE_URL = import.meta.env.VITE_APP_API_URL;
 console.log('import.meta.env', import.meta.env)
-
 const middleware = async (response) => {
     if (response.ok && [200, 201].includes(response.status)) {
         return await response.json();
@@ -16,7 +14,7 @@ const middleware = async (response) => {
     ) {
         toast.error(data.message);
         localStorage.clear();
-        window.location.replace('/login');
+        LogoutUser();
     }
     toast.error(data.message || 'Something went wrong');
     return { isError: true, response };
@@ -25,16 +23,19 @@ const middleware = async (response) => {
 // Helper function to make API calls
 export const apiRequest = async (endpoint, method = 'GET', data = null) => {
     const token = getJWTToken();
-    setLoadingState({ loading: true });
-    const config = {
-        method,
-        headers: {
-            'Content-Type': 'application/json',
-        },
+    let config = {
+        method: method,
+        headers: {}
     };
-
     if (data) {
-        config.body = JSON.stringify(data);
+        if (data instanceof FormData) {
+            // If data is FormData, let the browser set the appropriate headers
+            config.body = data;
+        } else {
+            // If data is an object, set Content-Type to application/json
+            config.headers['Content-Type'] = 'application/json';
+            config.body = JSON.stringify(data);
+        }
     }
 
     if (token) {

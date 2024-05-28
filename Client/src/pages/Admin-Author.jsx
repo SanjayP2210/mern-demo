@@ -2,7 +2,7 @@ import { useState } from "react";
 import apiService from "../service/apiService";
 import Loader from "../components/Loader/Loader";
 
-const AuthorForm = () => {
+const AdminUpdateAuthor = () => {
   const [data, setData] = useState({
     name: "",
     age: "",
@@ -83,4 +83,4 @@ const AuthorForm = () => {
   );
 };
 
-export default AuthorForm;
+export default AdminUpdateAuthor;

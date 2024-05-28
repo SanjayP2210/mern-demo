@@ -33,6 +33,7 @@ const contactReducer = createSlice({
             .addCase(fetchContact.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                state.contacts = [];
             }).addCase(fetchContact.fulfilled, (state, action) => {
                 state.loading = false;
                 const data = action.payload;
@@ -40,6 +41,7 @@ const contactReducer = createSlice({
             }).addCase(fetchContact.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
+                state.contacts = [];
             })
             .addCase(createContact.pending, (state) => {
                 state.loading = true;
@@ -49,11 +51,12 @@ const contactReducer = createSlice({
                 const data = action.payload;
                 state.loading = false;
                 state.status = 'succeeded';
-                if (data.isError) return toast.error(data.message);
+                if (!data.isError) {
+                    toast.success(data.message);
+                    state.contacts.push(data.contact);
+                    state.isContactAdded = true;
+                }
 
-                toast.success(data.message);
-                state.contacts.push(data.contact);
-                state.isContactAdded = true;
             }).addCase(createContact.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
@@ -68,10 +71,10 @@ const contactReducer = createSlice({
                 const data = action.payload;
                 state.loading = false;
                 state.status = 'succeeded';
-                if (data.isError) return toast.error(data.message);
-
-                toast.success(data.message);
-                state.isContactDeleted = true;
+                if (!data.isError) {
+                    toast.success(data.message);
+                    state.isContactDeleted = true;
+                }
             }).addCase(deleteContact.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;

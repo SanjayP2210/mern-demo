@@ -1,26 +1,30 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 export const Home = () => {
+  const navigate = useNavigate();
   return (
     <>
       <main>
-        <section className="section-hero">
-          <div className="container grid grid-two-cols">
-            <div className="hero-content">
-              <h1>Welcome to Demo</h1>
+        <section>
+          <div>
+            <div className="home-page-contain content">
+              <h1>Design Your House</h1>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam
-                in quaerat similique natus obcaecati labore, sapiente soluta
-                recusandae quod quam cum voluptatum. Rerum, nisi impedit
-                perspiciatis temporibus officia perferendis quaerat.
+                By using our website you can design your own website very
+                beautiful. <br /> Lorem, ipsum dolor sit amet consectetur
+                adipisicing elit.{" "}
               </p>
-              <div className="btn btn-group">
-                <Link to="/contact">
-                  <button className="btn">connect now</button>
-                </Link>
-                <Link to="/services">
-                  <button className="btn secondary-btn">learn more</button>
-                </Link>
+              <div>
+                <br />
+                <br />
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigate("/contact");
+                  }}
+                >
+                  connect now{" "}
+                </button>
               </div>
             </div>
           </div>

@@ -3,16 +3,39 @@ import { TailSpin } from "react-loader-spinner";
 
 const Loader = ({ visible }) => {
   return (
-    <TailSpin // Type of spinner
-      height="120"
-      width="120"
-      color="#4fa94d"
-      ariaLabel="tail-spin-loading"
-      radius="1"
-      wrapperStyle={{}}
-      wrapperClass="spinner-div"
-      visible={visible}
-    />
+    // <TailSpin // Type of spinner
+    //   height="120"
+    //   width="120"
+    //   color="#4fa94d"
+    //   ariaLabel="tail-spin-loading"
+    //   radius="1"
+    //   wrapperStyle={{}}
+    //   wrapperClass="spinner-div"
+    //   visible={visible}
+    // />
+    <>
+      {visible && (
+        <>
+          <div className="spinner-div">
+            {/* <div className="cell">
+              <div className="circle fade-out-right-1">
+                <p className="fade-out-right-1"></p>
+              </div>
+            </div> */}
+            <div className="cell">
+              <div className="circle loader"></div>
+            </div>
+          </div>
+          {/* <div className="spinner-div">
+            <div className="cell">
+              <div className="circle fade-out-right-2">
+                <p className="fade-out-right-2"></p>
+              </div>
+            </div>
+          </div> */}
+        </>
+      )}
+    </>
   );
 };
 

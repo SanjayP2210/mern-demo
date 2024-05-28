@@ -3,7 +3,7 @@ import apiService from "../service/apiService";
 import Loader from "../components/Loader/Loader";
 import { toast } from "react-toastify";
 
-const BookForm = () => {
+const AdminBook = () => {
   const [data, setData] = useState({
     title: "",
     genre: "",
@@ -86,8 +86,10 @@ const BookForm = () => {
                   </div>
 
                   <div>
-                    <label htmlFor="password">Author</label>
+                    <label htmlFor="authorId">Author</label>
                     <select
+                      id="authorId"
+                      name="authorId"
                       value={data.authorId}
                       onChange={handleInput}
                       required
@@ -115,4 +117,4 @@ const BookForm = () => {
   );
 };
 
-export default BookForm;
+export default AdminBook;

@@ -29,7 +29,7 @@ const middleware = async (response) => {
         window.location.replace('/login');
     }
     toast.error(data.message);
-    return { isError: true, response };
+    return { isError: true, response: data };
 }
 
 const userData = localStorage.getItem("loginUserData") ? JSON.parse(localStorage.getItem("loginUserData")) : null;
@@ -44,7 +44,8 @@ const initialState = {
     isLoggedIn: userData,
     isAdmin: userData?.isAdmin,
     isAPIRunning: false,
-    loading: false
+    loading: false,
+    error: null
 }
 const loginReducer = createSlice({
     name: 'login',
@@ -68,20 +69,22 @@ const loginReducer = createSlice({
         }).addCase(loginUser.fulfilled, (state, action) => {
             const data = action.payload;
             state.loading = false;
-            if (data.isError) return toast.error(data.message);
-
-            toast.success(data.message);
-            const { token, user } = action.payload;
-            if (token && user) {
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('token', token);
-                state.token = user.token;
-                state.loginUserData = user;
-                storeTokenInLS(token);
-                setUserData(state.loginUserData);
-                state.isLoggedIn = true;
-                state.isAdmin = user?.isAdmin
+            state.error = data.message;
+            if (!data.isError) {
+                toast.success(data.message);
+                const { token, user } = action.payload;
+                if (token && user) {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('token', token);
+                    state.token = user.token;
+                    state.loginUserData = user;
+                    storeTokenInLS(token);
+                    setUserData(state.loginUserData);
+                    state.isLoggedIn = true;
+                    state.isAdmin = user?.isAdmin
+                }
             }
+
         }).addCase(loginUser.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
