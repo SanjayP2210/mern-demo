@@ -3,7 +3,7 @@ import userModel from '../models/userModel.js';
 
 const authMiddleWare = async (req, res, next) => {
     console.log('authMiddlweare called', req);
-    const token = req.header('Authorization');
+    const token = req.cookies?.token || req.header('Authorization');
     console.log('token', token);
     try {
         if (token) {
@@ -29,7 +29,7 @@ const authMiddleWare = async (req, res, next) => {
                 req.user = userData;
                 req.token = token;
                 req.userID = userData._id;
-                req.isOwnUser = isVerified?.usrId === req?.params?.id;
+                req.isOwnUser = isVerified?.userID === req?.params?.id;
                 next();
 
             }

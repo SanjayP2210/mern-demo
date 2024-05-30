@@ -24,7 +24,12 @@ const getOne = (Model, controllerName) => async (req, res, next) => {
 const postRequest = (Model, controllerName) => async (req, res, next) => {
     console.log('controllerName', controllerName)
     const model = new Model(req.body);
+    model.createdAt = Date.now();
+    model.createdBy = req?.user?._id?.toString();
+    model.modifiedAt = Date.now();
+    model.modifiedBy = req?.user?._id?.toString();
     const response = await model.save(req.body);
+
     try {
         res.json({
             message: `${controllerName} added successfully`, [controllerName]: response

@@ -1,8 +1,16 @@
 import bookModel from "../models/bookModel.js";
 
 const addBook = async (req, res, next) => {
-    const { title, genre, authorId } = req.body;
-    const book = await bookModel.create({ title, genre, author: authorId });
+    const body = req.body;
+    body.createdAt = Date.now();
+    body.createdBy = req?.user?._id?.toString();
+    body.modifiedAt = Date.now();
+    body.modifiedBy = req?.user?._id?.toString();
+    const { title, genre, authorId } = body;
+    const book = await bookModel.create({
+        ...body,
+        author: authorId
+    });
     try {
         res.json({ message: 'book added successfully', book: book });
     } catch (err) {

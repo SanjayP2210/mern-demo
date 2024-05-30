@@ -3,6 +3,10 @@ import authorModel from "../models/authorModel.js";
 const addAuthor = async (req, res, next) => {
     try {
         const body = req.body;
+        body.createdAt = Date.now();
+        body.createdBy = req?.user?._id?.toString();
+        body.modifiedAt = Date.now();
+        body.modifiedBy = req?.user?._id?.toString();
         const data = await authorModel.create(body);
         res.json({ message: 'author added successfully', author: data });
     } catch (error) {

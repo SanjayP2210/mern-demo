@@ -10,6 +10,7 @@ const main = async () => {
         console.log('connect successfully', connection.connection.host);
     } catch (error) {
         console.log('error while connecting ', error);
+        process.exit(1);
     }
 }
 

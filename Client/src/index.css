@@ -233,6 +233,7 @@ a.active {
       width: 100%;
       padding: 0.6rem 2.6rem;
       border-radius: 8px;
+      border: 1px solid white;
     }
   }
 }
@@ -350,6 +351,7 @@ a.active {
       width: 100%;
       padding: 0.6rem 2.6rem;
       border-radius: 8px;
+      border: 1px solid white;
     }
 
     & select {
@@ -417,6 +419,7 @@ a.active {
 }
 
 th {
+  cursor:pointer;
   font-size: 1.8rem;
   letter-spacing: 0.1rem;
   padding: 3rem;
@@ -438,6 +441,27 @@ td {
     /* border: 0.1rem solid red; */
 }
 
+.sort-icon::after {
+  content: '\25B2';
+  /* Upwards arrow */
+  position: absolute;
+  right: 10px;
+  font-size: 0.8em;
+  visibility: hidden;
+}
+
+th[data-sort="asc"] .sort-icon::after {
+  content: '\25B2';
+  /* Upwards arrow */
+  visibility: visible;
+}
+
+th[data-sort="desc"] .sort-icon::after {
+  content: '\25BC';
+  /* Downwards arrow */
+  visibility: visible;
+}
+
 table {
   background: black;
   box-shadow: rgba(255, 255, 255, 0.2) 0px 7px 29px 0px;
@@ -447,6 +471,7 @@ table {
   -moz-border-radius: 1rem;
   -ms-border-radius: 1rem;
   -o-border-radius: 1rem;
+  min-height: 60vh;
 }
 
 .admin-contacts-section {
@@ -493,6 +518,7 @@ table {
         border: none;
         padding: 1.4rem 0rem 1.4rem 2rem;
         color: var(--dark-color);
+        border: 1px solid white;
       }
 
       & input,
@@ -546,6 +572,7 @@ table {
         width: 100%;
         padding: 0.6rem 2.6rem;
         border-radius: 8px;
+        border: 1px solid white;
       }
     }
   }

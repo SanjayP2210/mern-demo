@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import { toast } from "react-toastify";
 import apiService from "../service/apiService";
 
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-    return await apiService.getRequest('user');
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async (params) => {
+    return await apiService.getRequest(params ? `user?${params.toString()}` : 'user');
 });
 
 export const fetchUsersById = createAsyncThunk('users/fetchUsersById', async (id) => {
@@ -16,11 +16,11 @@ export const addUser = createAsyncThunk('users/addUser', async (newUser) => {
 });
 
 export const updateUser = createAsyncThunk('users/updateUser', async (updatedUser) => {
-    return await apiService.patchRequest(`user/${updatedUser?.userId}`, updatedUser.formData);
+    return await apiService.patchRequest(`user/${updatedUser?.userID}`, updatedUser.formData);
 });
 
-export const removeUser = createAsyncThunk('users/removeUser', async (userId) => {
-    return await apiService.deleteRequest(`user/${userId}`);
+export const removeUser = createAsyncThunk('users/removeUser', async (userID) => {
+    return await apiService.deleteRequest(`user/${userID}`);
 });
 
 const getUsersFLS = () => {
@@ -43,6 +43,7 @@ const initState = {
         email: "",
         mobileNumber: "",
     },
+    response: null,
     status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
 }
 
@@ -118,18 +119,19 @@ const userReducer = createSlice({
                 state.loading = true;
                 state.error = null;
                 state.status = 'loading';
-
+                state.response = null;
             })
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.isUserUpdated = false;
                 state.loading = false;
                 state.status = 'succeeded';
                 state.users = action.payload.users;
-
+                state.response = action.payload;
             })
             .addCase(fetchUsers.rejected, (state, action) => {
                 state.loading = false;
                 state.status = 'rejected';
+                state.response = null;
                 state.error = action.error.message;
 
             })
@@ -137,16 +139,18 @@ const userReducer = createSlice({
                 state.loading = true;
                 state.error = null;
                 state.status = 'loading';
+                state.response = null;
             })
             .addCase(fetchUsersById.fulfilled, (state, action) => {
                 state.loading = false;
                 state.status = 'succeeded';
                 state.userData = action.payload.userData;
-
+                state.response = action.payload;
             })
             .addCase(fetchUsersById.rejected, (state, action) => {
                 state.loading = false;
                 state.status = 'rejected';
+                state.response = null;
                 state.error = action.error.message;
 
             })
@@ -155,11 +159,13 @@ const userReducer = createSlice({
                 state.error = null;
                 state.isUserAdded = false;
                 state.status = 'loading';
+                state.response = null;
             })
             .addCase(addUser.fulfilled, (state, action) => {
                 const data = action.payload;
                 state.loading = false;
                 state.status = 'succeeded';
+                state.response = action.payload;
                 if (!data.isError) {
                     toast.success(data.message);
                     state.users.push(data.user);
@@ -169,6 +175,7 @@ const userReducer = createSlice({
             .addCase(addUser.rejected, (state, action) => {
                 state.loading = false;
                 state.status = 'rejected';
+                state.response = null;
                 state.error = action.error.message;
                 state.isUserAdded = false;
 
@@ -178,11 +185,13 @@ const userReducer = createSlice({
                 state.error = null;
                 state.isUserUpdated = false;
                 state.status = 'loading';
+                state.response = null;
             })
             .addCase(updateUser.fulfilled, (state, action) => {
                 const data = action.payload;
                 state.loading = false;
                 state.status = 'succeeded';
+                state.response = action.payload;
                 if (!data.isError) {
                     state.loading = false;
                     state.status = 'succeeded';
@@ -192,6 +201,7 @@ const userReducer = createSlice({
             .addCase(updateUser.rejected, (state, action) => {
                 state.loading = false;
                 state.status = 'rejected';
+                state.response = null;
                 state.error = action.error.message;
                 state.isUserUpdated = false;
 
@@ -201,11 +211,13 @@ const userReducer = createSlice({
                 state.error = null;
                 state.isUserDeleted = false;
                 state.status = 'loading';
+                state.response = null;
             })
             .addCase(removeUser.fulfilled, (state, action) => {
                 const data = action.payload;
                 state.loading = false;
                 state.status = 'succeeded';
+                state.response = data;
                 if (!data.isError) {
                     toast.success(data.message);
                     state.isUserDeleted = true;
@@ -214,6 +226,7 @@ const userReducer = createSlice({
             .addCase(removeUser.rejected, (state, action) => {
                 state.loading = false;
                 state.status = 'rejected';
+                state.response = null;
                 state.error = action.error.message;
                 state.isUserDeleted = false;
 

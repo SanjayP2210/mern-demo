@@ -10,6 +10,18 @@ export const loginUser = createAsyncThunk('login/loginUser', async (formData) =>
             "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        credentials: 'include',
+    });
+    return await middleware(response);
+});
+
+export const logoutUser = createAsyncThunk('login/logoutUser', async () => {
+    const response = await fetch(`${BASE_URL}/user/logout`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: '',
     });
     return await middleware(response);
 });
@@ -51,12 +63,12 @@ const loginReducer = createSlice({
     name: 'login',
     initialState: initialState,
     reducers: {
-        logoutUser: (state) => {
-            state.loginUserData = {};
-            state.isAdmin = false;
-            state.isLoggedIn = false;
-            state.token = null;
-        },
+        // logoutUser: (state) => {
+        //     state.loginUserData = {};
+        //     state.isAdmin = false;
+        //     state.isLoggedIn = false;
+        //     state.token = null;
+        // },
         setLoadingState: (state, action) => {
             state.loading = action.payload.loading;
             console.log('setLoadingState caaled', state.loading)
@@ -90,9 +102,14 @@ const loginReducer = createSlice({
             state.error = action.error.message;
             state.isUserDeleted = false;
             console.log('state', state);
+        }).addCase(logoutUser.fulfilled, (state, action) => {
+            state.loginUserData = {};
+            state.isAdmin = false;
+            state.isLoggedIn = false;
+            state.token = null;
         });
     }
 })
 
-export const { logoutUser, setLoadingState } = loginReducer.actions;
+export const { setLoadingState } = loginReducer.actions;
 export default loginReducer.reducer;

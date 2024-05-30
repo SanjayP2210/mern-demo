@@ -3,6 +3,10 @@ import contactModel from "../models/contact-model.js";
 const addContact = async (req, res, next) => {
     try {
         const body = req.body;
+        body.createdAt = Date.now();
+        body.createdBy = req?.user?._id?.toString();
+        body.modifiedAt = Date.now();
+        body.modifiedBy = req?.user?._id?.toString();
         const newContact = await contactModel.create(body);
 
         res.status(201).json({

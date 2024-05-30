@@ -126,7 +126,7 @@ export const UserForm = ({ isEdit = false }) => {
       });
       formData.append("image", image);
       if (isEdit) {
-        dispatch(updateUser({ formData: formData, userId: userData?._id }));
+        dispatch(updateUser({ formData: formData, userID: userData?._id }));
       } else {
         dispatch(addUser(formData));
       }

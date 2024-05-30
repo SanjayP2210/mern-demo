@@ -40,6 +40,20 @@ const userSchema = new mongoose.Schema({
         default: false
     },
     technology: { type: [Schema.Types.ObjectId], ref: 'technology', required: true },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    createdBy: {
+        type: Schema.Types.ObjectId
+    },
+    modifiedBy: {
+        type: Schema.Types.ObjectId
+    },
+    modifiedAt: {
+        type: Date,
+        default: Date.now()
+    }
 })
 
 userSchema.pre("save", async function (next) {
@@ -58,14 +72,14 @@ userSchema.pre("save", async function (next) {
     }
 })
 
-userSchema.methods.generateToken = async function () {
+userSchema.methods.generateToken = function () {
     try {
         return jwt.sign({
-            usrId: this._id.toString(),
+            userID: this._id.toString(),
             isAdmin: this._isAdmin,
             email: this.email
         }, process.env.JWT_SECRET_KEY, {
-            expiresIn: '30d'
+            expiresIn: process.env.JWT_EXPIRE
         }
         )
     } catch (error) {
