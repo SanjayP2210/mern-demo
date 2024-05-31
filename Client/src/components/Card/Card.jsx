@@ -7,7 +7,7 @@ import Loader from "../Loader/Loader";
 import { FaPlus, FaTrash } from "react-icons/fa";
 
 const Card = ({ endPoint, arrayName, componentName, visibleFields }) => {
-  const { isAdmin, isLoggedIn } = useSelector((state) => state.login);
+  const { isAdmin, isLoggedIn } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [list, setList] = useState([]);
   const [loading, setIsLoading] = useState(true);

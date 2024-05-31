@@ -3,11 +3,22 @@ import "./Navbar.css";
 import { useSelector } from "react-redux";
 import { LogoutSVG } from "../../assets/images/svg/LogoutSVG.jsx";
 import { LoginSVG } from "../../assets/images/svg/LoginSVG.jsx";
+import { useEffect } from "react";
 
 export const Navbar = () => {
-  const { isAdmin, isLoggedIn } = useSelector((state) => state.login);
+  const { isAdmin, isLoggedIn } = useSelector((state) => state.auth);
   const location = useLocation();
   console.log("location", location);
+  const bodyEle = document.getElementsByTagName("body")[0];
+  useEffect(() => {
+    // const isHomePage = (window?.location?.pathname = "/");
+    if (location?.pathname === "/") {
+      bodyEle.classList.add("banner");
+    } else {
+      bodyEle.classList.remove("banner");
+    }
+  }, [bodyEle, location]);
+
   return (
     <>
       <header>
@@ -80,6 +91,9 @@ export const Navbar = () => {
                     </NavLink>
                   </li>
                   <li>
+                    <NavLink to="/reset-password"> Reset Password </NavLink>
+                  </li>
+                  <li>
                     <NavLink to="/logout" className="tooltip">
                       {" "}
                       <span className="tooltip-text ">Log Out</span>
@@ -102,7 +116,10 @@ export const Navbar = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/register"> Register </NavLink>
+                    <NavLink to="/register"> Sign Up </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/forget-password"> Forget Password </NavLink>
                   </li>
                   <li>
                     <NavLink to="/login" className="tooltip">

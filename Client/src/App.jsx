@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { Register } from "./pages/Register.jsx";
 import { Login } from "./pages/Login.jsx";
 import { UserList } from "./pages/UserList.jsx";
@@ -18,6 +18,9 @@ import { ContactList } from "./pages/ContactList.jsx";
 import UploadImage from "./components/UploadImage/UploadImage.jsx";
 import Profile from "./pages/Profile.jsx";
 import Technology from "./pages/Technology.jsx";
+import ForgetPassword from "./pages/ForgetPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
+import { useEffect } from "react";
 
 function App() {
   return (
@@ -28,10 +31,13 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/contact" element={<ContactList />} />
           <Route path="/upload-image" element={<UploadImage />} />
           <Route path="/" element={<PrivateRoute />}>
+            <Route path="reset-password" element={<ResetPassword />} />
             <Route path="book" element={<BookList />} />
             <Route path="author" element={<AuthorList />} />
             <Route path="profile" element={<Profile />} />

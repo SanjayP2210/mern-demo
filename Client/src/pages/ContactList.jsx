@@ -13,7 +13,7 @@ export const ContactList = () => {
   }
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isAdmin, isLoggedIn } = useSelector((state) => state.login);
+  const { isAdmin, isLoggedIn } = useSelector((state) => state.auth);
   const { contacts, isContactDeleted, loading } = useSelector(
     (state) => state.contact
   );

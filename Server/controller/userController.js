@@ -1,5 +1,8 @@
+import { sendMail } from "../middleware/sendMail.js";
 import { sendToken } from "../middleware/sendToken.js";
 import userModel from "../models/userModel.js";
+import crypto from 'crypto';
+import { resetPassword } from "./authController.js";
 
 const getUser = async (req, res, next) => {
     try {
@@ -70,6 +73,22 @@ const deleteUser = async (req, res, next) => {
     }
 };
 
+const sendEmail = async (req, res, next) => {
+    try {
+        const response = await sendMail();
+        if (response?.isError) {
+            const error = response?.error;
+            res.status(400).send({ message: 'Error in send email', error: error?.message });
+        }
+        if (response && response?.messageId) {
+            console.log('Message sent: %s', response?.messageId);
+            console.log('Preview URL: %s', response?.preview);
+            res.status(200).send({ message: `Mail sent successfully to ${response.messageId}`, response });
+        }
+    } catch (error) {
+        res.status(400).send({ message: 'Error in send email', error });
+    }
+}
 // const userSchema = new mongoose.Schema({
 //     name: String,
 //     image: String,
@@ -113,97 +132,36 @@ const deleteUser = async (req, res, next) => {
 //     }
 // };
 
-const registerUser = async (req, res, next) => {
+const updatePassword = async (req, res, next) => {
     try {
-        const dataJson = req.body;
-        const image = req.file.filename;
-        const technology = req.body.technology.split(',');
-        const isFound = await userModel.findOne({ email: dataJson.email });
-        console.log("isFound", isFound);
-        if (isFound) {
-            return res.status(401).json({ message: "user is already registered" });
+        const { password, confirmPassword, oldPassword, email } = req.body;
+        const user = await userModel.findOne({ email: email });
+        const isPassMatch = await user.comparePassword(oldPassword);
+        if (!isPassMatch) {
+            return res.status(401).json({ message: "Old Password is Incorrect", isError: true });
         }
-        const data = await userModel.create({ ...dataJson, image, technology: technology });
-        console.log("data", data);
-        // res.status(201).json({
-        //     message: "user registered successfully",
-        //     user: data,
-        //     token: await data.generateToken(),
-        // });
-        sendToken(data, res, 201, "user registered successfully");
+
+        if (password !== confirmPassword) {
+            return res.status(401).json({ message: "Password does not matched", isError: true });
+        }
+
+        user.password = password;
+        await user.save({ validateBeforeSave: false });
+
+        sendToken(user, res, 200, "Password has been updated successfully");
     } catch (error) {
-        if (error.name === "ValidationError") {
-            let errors = { message: {} };
-
-            Object.keys(error.errors).forEach((key) => {
-                errors.message[key] = error.errors[key].message;
-            });
-
-            errors.status = 404;
-            return next(errors);
-        }
-        res.status(500).send("Something went wrong");
+        res.status(400).json({ message: 'Error while reset password', error: error, isError: true });
     }
-};
+}
 
-const loginUser = async (req, res, next) => {
-    try {
-        const { email, password } = req.body;
-        console.log("req.body", req.body);
-        if (email && password) {
-            const userExist = await userModel.findOne({ email: email });
-            console.log("userExist user", userExist);
-            if (!userExist) {
-                return res.status(401).json({ message: "email does not exist" });
-            }
-            const user = await userExist.comparePassword(password);
-            console.log("compare user", user);
-            if (user) {
-                sendToken(userExist, res, 200, "Login Successfully");
-                // res.status(200).json({
-                //     message: "Login Successfully",
-                //     user: userExist,
-                //     userID: userExist._id.toString(),
-                //     token: await userExist.generateToken(),
-                // });
-            } else {
-                const error = new Error("Invalid email or password");
-                error.status = 404;
-                return next(error);
-            }
-        } else {
-            return res
-                .status(401)
-                .json({ message: "email and password is required" });
-        }
-    } catch (err) {
-        console.log("err while login", err);
-    }
-};
-
-const logoutUser = async (req, res, next) => {
-    try {
-        res.cookie('token', null, {
-            expires: new Date(Date.now()),
-            httpOnly: true,
-        });
-        res.status(200).json({
-            success: true,
-            message: "Logout Successfully",
-        });
-    } catch (err) {
-        console.log("err while login", err);
-    }
-};
 
 export {
     getUser,
-    registerUser,
-    loginUser,
     getUserById,
     updateUser,
     deleteUser,
-    logoutUser
+    sendEmail,
+    updatePassword
     // getImage,
     // uploadImage,
     // deleteImage

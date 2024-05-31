@@ -3,6 +3,7 @@ import userRouter from './router/userRouter.js';
 import contactRouter from './router/contactRouter.js';
 import bookRouter from './router/bookRouter.js';
 import authorRouter from './router/authorRouter.js';
+import authRouter from './router/authRouter.js';
 import technologyRouter from './router/technologyRouter.js';
 import main from './config/db.js';
 import dotenv from 'dotenv';
@@ -30,6 +31,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 
+app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/book', bookRouter);

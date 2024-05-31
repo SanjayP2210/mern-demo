@@ -2,7 +2,8 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { addUser, fetchUsersById, updateUser } from "../reducers/userReducer";
+import { fetchUsersById, updateUser } from "../reducers/userReducer";
+import { addUser, resetState } from "../reducers/authReducer.js";
 import apiService from "../service/apiService.js";
 import UploadImage from "../components/UploadImage/UploadImage";
 import Select from "react-select";
@@ -25,10 +26,11 @@ export const UserForm = ({ isEdit = false }) => {
   });
   const [technology, setTechnology] = useState([]);
   const [image, setImage] = useState(null);
-  const { userData, isUserUpdated, loading, isUserAdded } = useSelector(
+  const { userData, isUserUpdated, loading } = useSelector(
     (state) => state.user
   );
-  const { loginUserData } = useSelector((state) => state.login);
+  const { isAdmin, isLoggedIn } = useSelector((state) => state.auth);
+  const { loginUserData, isUserAdded } = useSelector((state) => state.auth);
   const roleOptions = [
     { label: "Admin", value: true },
     { label: "User", value: false },
@@ -99,6 +101,7 @@ export const UserForm = ({ isEdit = false }) => {
         password: "",
         mobileNumber: "",
       });
+      dispatch(resetState());
       navigate("/login");
     }
   }, [isUserAdded]);
@@ -252,7 +255,7 @@ export const UserForm = ({ isEdit = false }) => {
                         onChange={handleInput}
                       />
                     </div>
-                    {userID === loginUserData._id && (
+                    {!isLoggedIn && (
                       <div>
                         <label htmlFor="password">password</label>
                         <input
@@ -267,36 +270,40 @@ export const UserForm = ({ isEdit = false }) => {
                         />
                       </div>
                     )}
-                    <div>
-                      <label htmlFor="authorId">Role</label>
-                      <Select
-                        id="isAdmin"
-                        name="isAdmin"
-                        value={data?.isAdmin ? roleOptions[0] : roleOptions[1]}
-                        options={roleOptions}
-                        styles={{
-                          control: (baseStyles, state) => ({
-                            ...baseStyles,
-                            backgroundColor: "black",
-                            borderColor: state.isFocused ? "grey" : "white",
-                            fontSize: "14px",
-                            container: "black",
-                          }),
-                        }}
-                        theme={(theme) => ({
-                          ...theme,
-                          borderRadius: 8,
-                          colors: {
-                            ...theme.colors,
-                            primary25: "#b5b5b55e",
-                            primary: "#b5b5b55e",
-                          },
-                        })}
-                        onChange={onSelectRole}
-                        className="react-select-container"
-                        classNamePrefix="react-select"
-                      />
-                    </div>
+                    {isAdmin && (
+                      <div>
+                        <label htmlFor="authorId">Role</label>
+                        <Select
+                          id="isAdmin"
+                          name="isAdmin"
+                          value={
+                            data?.isAdmin ? roleOptions[0] : roleOptions[1]
+                          }
+                          options={roleOptions}
+                          styles={{
+                            control: (baseStyles, state) => ({
+                              ...baseStyles,
+                              backgroundColor: "black",
+                              borderColor: state.isFocused ? "grey" : "white",
+                              fontSize: "14px",
+                              container: "black",
+                            }),
+                          }}
+                          theme={(theme) => ({
+                            ...theme,
+                            borderRadius: 8,
+                            colors: {
+                              ...theme.colors,
+                              primary25: "#b5b5b55e",
+                              primary: "#b5b5b55e",
+                            },
+                          })}
+                          onChange={onSelectRole}
+                          className="react-select-container"
+                          classNamePrefix="react-select"
+                        />
+                      </div>
+                    )}
                     <div>
                       <label htmlFor="authorId">Technology</label>
                       <Select

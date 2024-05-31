@@ -3,10 +3,9 @@ import {
     deleteUser,
     getUser,
     getUserById,
-    loginUser,
-    logoutUser,
-    registerUser,
     updateUser,
+    sendEmail,
+    updatePassword
 } from "../controller/userController.js";
 import authMiddleWare from "../middleware/auth-middle-ware.js";
 import { adminMiddleware } from "../middleware/admin-middleware.js";
@@ -29,12 +28,12 @@ const upload = multer({ storage: storage });
 // router.post('/upload-image', upload.single('image'), uploadImage)
 // router.delete("/upload-image/:id", deleteImage);
 
+// user routes
 router.get("/", authMiddleWare, adminMiddleware, getUser);
 router.get("/:id", authMiddleWare, adminMiddleware, getUserById);
-router.post("/register", upload.single('image'), registerUser);
-router.post("/login", loginUser);
-router.post("/logout", logoutUser);
 router.patch("/:id", authMiddleWare, adminMiddleware, upload.single('image'), updateUser);
 router.delete("/:id", authMiddleWare, adminMiddleware, deleteUser);
+router.post("/sendMail", sendEmail);
+router.post("/reset-password", updatePassword);
 
 export default router;

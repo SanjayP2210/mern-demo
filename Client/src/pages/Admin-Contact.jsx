@@ -12,12 +12,12 @@ const defaultContactFormData = {
 export const AdminContact = () => {
   const [contact, setContact] = useState(defaultContactFormData);
   const dispatch = useDispatch();
-  const { loginUserData } = useSelector((state) => state.login);
+  const { loginUserData, isLoggedIn } = useSelector((state) => state.auth);
   useEffect(() => {
-    if (loginUserData) {
+    if (loginUserData && isLoggedIn) {
       setContact({
-        userName: loginUserData.userName,
-        email: loginUserData.email,
+        userName: loginUserData?.userName,
+        email: loginUserData?.email,
         message: "",
       });
     }
@@ -64,7 +64,7 @@ export const AdminContact = () => {
                   name="userName"
                   id="userName"
                   autoComplete="off"
-                  value={contact.userName}
+                  value={contact?.userName}
                   onChange={handleInput}
                   required
                 />
@@ -77,7 +77,7 @@ export const AdminContact = () => {
                   name="email"
                   id="email"
                   autoComplete="off"
-                  value={contact.email}
+                  value={contact?.email}
                   onChange={handleInput}
                   required
                 />
@@ -89,7 +89,7 @@ export const AdminContact = () => {
                   name="message"
                   id="message"
                   autoComplete="off"
-                  value={contact.message}
+                  value={contact?.message}
                   onChange={handleInput}
                   required
                   cols="30"

@@ -11,7 +11,7 @@ export const Login = () => {
   const dispatch = useDispatch();
   const token = getJWTToken();
   const { isLoggedIn, loginUserData, loading, error } = useSelector(
-    (state) => state.login
+    (state) => state.auth
   );
   const [user, setUser] = useState({
     email: "",

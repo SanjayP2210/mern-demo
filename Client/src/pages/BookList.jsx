@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import Card from "../components/Card/Card";
 
 const BookList = () => {
-  const { isAdmin, isLoggedIn } = useSelector((state) => state.login);
+  const { isAdmin, isLoggedIn } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [books, setBooks] = useState([]);
   const [loading, setIsLoading] = useState(true);

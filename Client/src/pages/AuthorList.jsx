@@ -7,7 +7,7 @@ import Card from "../components/Card/Card";
 
 export const AuthorList = () => {
   const navigate = useNavigate();
-  const { isAdmin, isLoggedIn } = useSelector((state) => state.login);
+  const { isAdmin, isLoggedIn } = useSelector((state) => state.auth);
   const [authors, setAuthors] = useState([]);
   const [loading, setIsLoading] = useState(true);
 

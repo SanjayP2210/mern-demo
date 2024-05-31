@@ -7,7 +7,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import "./UploadImage.css";
 
 const UploadImage = () => {
-  // const { isAdmin, isLoggedIn } = useSelector((state) => state.login);
+  // const { isAdmin, isLoggedIn } = useSelector((state) => state.auth);
   const [image, setImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   // const [users, setUsers] = useState([]);

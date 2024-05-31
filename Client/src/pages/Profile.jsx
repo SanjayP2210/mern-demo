@@ -6,7 +6,7 @@ import { FaEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
-  const { loginUserData: user } = useSelector((state) => state.login);
+  const { loginUserData: user } = useSelector((state) => state.auth);
   const [technology, setTechnology] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
