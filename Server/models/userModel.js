@@ -5,7 +5,10 @@ import { Schema } from "mongoose";
 import crypto from 'crypto';
 
 const userSchema = new mongoose.Schema({
-    image: String,
+    image: {
+        public_id: { type: String },
+        url: { type: String },
+    },
     userName: {
         type: String,
         required: [true, 'user name required'],

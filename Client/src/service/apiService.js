@@ -25,11 +25,13 @@ export const apiRequest = async (endpoint, method = 'GET', data = null) => {
     const token = getJWTToken();
     let config = {
         method: method,
-        headers: {}
+        headers: {},
+        credentials: 'include' // Include cookies in the request
     };
     if (data) {
         if (data instanceof FormData) {
             // If data is FormData, let the browser set the appropriate headers
+            // config.headers['Content-Type'] = 'multipart/form-data';
             config.body = data;
         } else {
             // If data is an object, set Content-Type to application/json
@@ -43,6 +45,13 @@ export const apiRequest = async (endpoint, method = 'GET', data = null) => {
     }
 
     const response = await fetch(`${BASE_URL}/${endpoint}`, config);
+    // Access the cookie
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('myCookie='))
+        ?.split('=')[1];
+    console.log('cookieValue', cookieValue);
+    // setCookie(cookieValue);
     // const responseData = await response.json();
     return middleware(response);
 };

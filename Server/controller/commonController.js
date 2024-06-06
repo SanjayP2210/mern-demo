@@ -1,3 +1,4 @@
+import { v2 as cloudinary } from 'cloudinary';
 
 const getAll = (Model, controllerName) => async (req, res, next,) => {
     try {
@@ -97,6 +98,36 @@ const deleteRequest = (Model, controllerName) => async (req, res, next) => {
     }
 }
 
+const uploadImage = async (imagePath) => {
+    const options = {
+        use_filename: true,
+        unique_filename: false,
+        overwrite: true,
+        folder: "users",
+        width: 150,
+        crop: 'scale',
+    };
+
+    try {
+        // Upload the image
+        const result = await cloudinary.uploader.upload(imagePath, options);
+        console.log(result);
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const deleteImage = async (public_id) => {
+    try {
+        const result = await cloudinary.uploader.destroy(public_id);
+        console.log(result);
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 export {
     postRequest,
     getAll,
@@ -104,4 +135,6 @@ export {
     putRequest,
     patchRequest,
     deleteRequest,
+    uploadImage,
+    deleteImage
 }

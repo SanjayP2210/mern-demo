@@ -8,6 +8,7 @@ import Loader from "../components/Loader/Loader";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import apiService from "../service/apiService";
 import _, { debounce } from "lodash";
+import defaultImage from "../assets/images/png/default_profile.png";
 
 export const UserList = () => {
   const [userList, setUserList] = useState([]);
@@ -132,17 +133,24 @@ export const UserList = () => {
         visible={loading}
       />
       {status != "loading" && (
-        <section>
-          <div className="contact-content container">
+        <section className="container">
+          <div className="contact-content">
             <h1 className="main-heading">User List</h1>
           </div>
-          <div className="container">
-            <div>
-              <form>
+          <div>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <form style={{ width: "50%", margin: "20px" }}>
                 <input
                   type="text"
                   name="search"
                   id="search"
+                  className="input"
                   value={search}
                   onChange={handleSearchChange}
                   placeholder="Search By Name..."
@@ -162,6 +170,7 @@ export const UserList = () => {
             <table className="table border" id="sortable-table">
               <thead>
                 <tr>
+                  <th>Image</th>
                   <th onClick={() => handleSort("userName")}>
                     Name {getSortIcon("userName")}
                   </th>
@@ -181,6 +190,18 @@ export const UserList = () => {
                 {status != "loading" &&
                   userList?.map((data) => (
                     <tr key={data?._id.toString()}>
+                      <td>
+                        <img
+                          className="nav-profile-image"
+                          src={`${
+                            data?.image?.url &&
+                            data?.image?.url?.includes("res.cloudinary.com")
+                              ? data?.image?.url
+                              : defaultImage
+                          }`}
+                          alt="profile image"
+                        />
+                      </td>
                       <td>{data?.userName}</td>
                       <td>{data?.email}</td>
                       <td>{data?.mobileNumber}</td>

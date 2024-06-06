@@ -24,7 +24,7 @@ function ResetPassword() {
         setData({ token: params.token });
       } else {
         toast.error("Invalid Token");
-        navigate("/login");
+        navigate("/");
       }
     } else {
       setData({ token: params.token });
@@ -54,13 +54,13 @@ function ResetPassword() {
         payload.email = loginUserData.email;
       }
       const response = await apiService.postRequest(
-        "user/reset-password",
+        JWTToken ? "user/reset-password" : "auth/reset-password",
         payload
       );
       if (!response.isError) {
         toast.success(response.message);
         setLoading(false);
-        navigate("/login");
+        navigate("/");
       } else {
         setLoading(false);
       }
@@ -82,10 +82,10 @@ function ResetPassword() {
             <div className="section-registration">
               <div className="main-container grid grid-two-cols">
                 {/* let tackle registration form  */}
-                <div className="registration-form">
+                <div className="registration-form ">
                   <form onSubmit={handleSubmit}>
                     {JWTToken && (
-                      <div>
+                      <div className="password-container">
                         <label htmlFor="password">Old password</label>
                         <input
                           type="password"
@@ -93,30 +93,72 @@ function ResetPassword() {
                           placeholder="oldPassword"
                           id="oldPassword"
                           required
+                          className="password-input"
                           autoComplete="off"
                           value={data.oldPassword}
                           onChange={handleInput}
                         />
+                        <span
+                          id="togglePassword"
+                          class="eye-icon"
+                          onClick={(e) => {
+                            const passwordInput =
+                              document.getElementById("oldPassword");
+                            const type =
+                              passwordInput.getAttribute("type") === "password"
+                                ? "text"
+                                : "password";
+                            passwordInput.setAttribute("type", type);
+
+                            // Toggle the eye icon (optional)
+                            e.target.textContent =
+                              type === "password" ? "👁️" : "👁️‍🗨️";
+                          }}
+                        >
+                          👁️
+                        </span>
                       </div>
                     )}
-                    <div>
+                    <div className="password-container">
                       <label htmlFor="password">password</label>
                       <input
                         type="password"
                         name="password"
                         placeholder="password"
+                        className="password-input"
                         id="password"
                         required
                         autoComplete="off"
                         value={data.password}
                         onChange={handleInput}
                       />
+                      <span
+                        id="togglePassword"
+                        class="eye-icon"
+                        onClick={(e) => {
+                          const passwordInput =
+                            document.getElementById("password");
+                          const type =
+                            passwordInput.getAttribute("type") === "password"
+                              ? "text"
+                              : "password";
+                          passwordInput.setAttribute("type", type);
+
+                          // Toggle the eye icon (optional)
+                          e.target.textContent =
+                            type === "password" ? "👁️" : "👁️‍🗨️";
+                        }}
+                      >
+                        👁️
+                      </span>
+                      {/* </input> */}
                     </div>
 
-                    <div>
+                    <div className="password-container">
                       <label htmlFor="confirmPassword">confirm password</label>
                       <input
                         type="password"
+                        className="password-input"
                         name="confirmPassword"
                         placeholder="confirmPassword"
                         id="confirmPassword"
@@ -125,6 +167,26 @@ function ResetPassword() {
                         value={data.confirmPassword}
                         onChange={handleInput}
                       />
+                      <span
+                        id="togglePassword"
+                        class="eye-icon"
+                        onClick={(e) => {
+                          const passwordInput =
+                            document.getElementById("confirmPassword");
+                          const type =
+                            passwordInput.getAttribute("type") === "password"
+                              ? "text"
+                              : "password";
+                          passwordInput.setAttribute("type", type);
+
+                          // Toggle the eye icon (optional)
+                          e.target.textContent =
+                            type === "password" ? "👁️" : "👁️‍🗨️";
+                        }}
+                      >
+                        👁️
+                      </span>
+                      {/* </input> */}
                     </div>
 
                     <br />

@@ -2,11 +2,22 @@ import { sendMail } from "../middleware/sendMail.js";
 import { sendToken } from "../middleware/sendToken.js";
 import userModel from "../models/userModel.js";
 import crypto from 'crypto';
+import { uploadImage } from "./commonController.js";
 
 const registerUser = async (req, res, next) => {
     try {
         const dataJson = req.body;
-        const image = req.file.filename;
+        const result = await uploadImage(dataJson?.image);
+        console.log(result);
+        let image = null;
+        if (result) {
+            image = {
+                public_id: result?.public_id,
+                url: result?.secure_url,
+            };
+        } else {
+            image = req?.file?.filename || body?.image[0];
+        }
         const technology = req.body.technology.split(',');
         const isFound = await userModel.findOne({ email: dataJson.email });
         console.log("isFound", isFound);
@@ -28,6 +39,7 @@ const registerUser = async (req, res, next) => {
             return next(errors);
         }
         res.status(500).send("Something went wrong");
+        return next(error);
     }
 };
 
@@ -68,7 +80,7 @@ const loginUser = async (req, res, next) => {
 
 const logoutUser = async (req, res, next) => {
     try {
-        res.cookie('token', null, {
+        res.cookie('token', undefined, {
             expires: new Date(Date.now()),
             httpOnly: true,
         });

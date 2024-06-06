@@ -77,7 +77,7 @@ const ForgetPassword = () => {
                     <br />
                     <h5>
                       Already have an account?{" "}
-                      <NavLink to="/login">
+                      <NavLink to="/">
                         <span className="tooltip-text ">Sign In</span>
                       </NavLink>
                     </h5>

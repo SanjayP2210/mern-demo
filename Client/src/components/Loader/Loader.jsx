@@ -1,7 +1,7 @@
 import "./Loader.css"; // Make sure to create and style this CSS file
 import { TailSpin } from "react-loader-spinner";
 
-const Loader = ({ visible }) => {
+const Loader = ({ visible, style }) => {
   return (
     // <TailSpin // Type of spinner
     //   height="120"
@@ -16,7 +16,7 @@ const Loader = ({ visible }) => {
     <>
       {visible && (
         <>
-          <div className="spinner-div">
+          <div className="spinner-div" style={style}>
             {/* <div className="cell">
               <div className="circle fade-out-right-1">
                 <p className="fade-out-right-1"></p>

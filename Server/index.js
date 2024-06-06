@@ -12,23 +12,32 @@ import cors from 'cors';
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
 import cookieParser from 'cookie-parser';
-
+import { v2 as cloudinary } from 'cloudinary';
+import bodyParser from 'body-parser';
+import fileUpload from 'express-fileupload';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 dotenv.config();
 const port = process.env.PORT || 3001;
 const app = express();
+main();
 app.use('/', express.static(path.join(__dirname, 'public/images')));
-
 app.use(cookieParser());
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
 const corsOptions = {
     origin: true, // Replace with your frontend's origin
     credentials: true, // Allow credentials (cookies)
 };
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload());
 
 
 app.use('/api/auth', authRouter);
@@ -37,7 +46,6 @@ app.use('/api/contact', contactRouter);
 app.use('/api/book', bookRouter);
 app.use('/api/author', authorRouter);
 app.use('/api/technology', technologyRouter);
-main();
 app.use(errorMiddleware);
 // app.use(authMiddleWare);
 

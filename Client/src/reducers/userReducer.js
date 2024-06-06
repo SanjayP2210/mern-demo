@@ -6,8 +6,8 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async (params) =>
     return await apiService.getRequest(params ? `user?${params.toString()}` : 'user');
 });
 
-export const fetchUsersById = createAsyncThunk('users/fetchUsersById', async (id) => {
-    return await apiService.getRequest(`user/${id}`);
+export const fetchUsersById = createAsyncThunk('users/fetchUsersById', async (id, isLoginUser) => {
+    return await apiService.getRequest(isLoginUser ? `user/me/${id}` : `user/${id}`);
     // return await middleware(response);
 });
 
@@ -36,6 +36,7 @@ const initState = {
     isUserUpdated: false,
     isUserDeleted: false,
     data: null,
+    user: {},
     loading: false,
     error: null,
     userData: {
@@ -51,6 +52,18 @@ const userReducer = createSlice({
     name: 'user',
     initialState: initState,
     reducers: {
+        resetUserState: (state, action) => {
+            state.userData = {
+                userName: "",
+                email: "",
+                mobileNumber: "",
+            };
+            state.loading = false;
+            state.error = null;
+            state.user = {};
+            state.users = [];
+
+        },
         // getUser: (state) => {
         //     return state.users;
         // },
@@ -186,6 +199,7 @@ const userReducer = createSlice({
                 state.isUserUpdated = false;
                 state.status = 'loading';
                 state.response = null;
+                state.user = {};
             })
             .addCase(updateUser.fulfilled, (state, action) => {
                 const data = action.payload;
@@ -196,6 +210,7 @@ const userReducer = createSlice({
                     state.loading = false;
                     state.status = 'succeeded';
                     state.isUserUpdated = true;
+                    state.user = data.user;
                 }
             })
             .addCase(updateUser.rejected, (state, action) => {
@@ -204,7 +219,7 @@ const userReducer = createSlice({
                 state.response = null;
                 state.error = action.error.message;
                 state.isUserUpdated = false;
-
+                state.user = {};
             })
             .addCase(removeUser.pending, (state) => {
                 state.loading = true;
@@ -234,6 +249,6 @@ const userReducer = createSlice({
     },
 })
 
-// export const { getUser, addUser, removeUser, updateUser } = userReducer.actions;
+export const { resetUserState } = userReducer.actions;
 
 export default userReducer.reducer;

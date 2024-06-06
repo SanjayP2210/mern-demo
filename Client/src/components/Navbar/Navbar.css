@@ -18,18 +18,18 @@ ul li a {
   vertical-align: middle;
   transform: perspective(1px) translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-  transition: transform 0.3s;
+  transition: transform 0.3s, color 0.3s;
   font-weight: bold;
+  font-size: 14px;
 }
 
 ul li a:before,
 ul li a:after {
   content: '';
   position: absolute;
-  width: 0%;
+  width: 0;
   height: 10px;
   bottom: -10px;
-  background: -webkit-radial-gradient(center, ellipse, #B2f302 0%, rgba(0, 0, 0, 0) 80%);
   background: radial-gradient(ellipse at center, #B2f302 0%, rgba(0, 0, 0, 0) 80%);
 }
 
@@ -61,11 +61,9 @@ ul li a.active {
 ul li a:hover {
   color: #B2f302;
   transform: translateY(-5px);
-  transition: transform 1s, width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 ul li a:hover:before {
-  background: -webkit-radial-gradient(center, ellipse, #fff 0%, rgba(0, 0, 0, 0) 80%);
   background: radial-gradient(ellipse at center, #fff 0%, rgba(0, 0, 0, 0) 80%);
   width: 100%;
   transition: width 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);

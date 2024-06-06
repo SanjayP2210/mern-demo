@@ -4,15 +4,19 @@ import { useSelector } from "react-redux";
 import { LogoutSVG } from "../../assets/images/svg/LogoutSVG.jsx";
 import { LoginSVG } from "../../assets/images/svg/LoginSVG.jsx";
 import { useEffect } from "react";
+import defaultImage from "../../assets/images/png/default_profile.png";
 
 export const Navbar = () => {
-  const { isAdmin, isLoggedIn } = useSelector((state) => state.auth);
+  const {
+    isAdmin,
+    isLoggedIn,
+    loginUserData: user,
+  } = useSelector((state) => state.auth);
   const location = useLocation();
-  console.log("location", location);
   const bodyEle = document.getElementsByTagName("body")[0];
   useEffect(() => {
     // const isHomePage = (window?.location?.pathname = "/");
-    if (location?.pathname === "/") {
+    if (location?.pathname === "/" && isLoggedIn) {
       bodyEle.classList.add("banner");
     } else {
       bodyEle.classList.remove("banner");
@@ -31,11 +35,11 @@ export const Navbar = () => {
           <nav>
             <ul>
               <li>
-                <NavLink to="/"> Home </NavLink>
+                <NavLink to="/home"> Home </NavLink>
               </li>
               {isLoggedIn ? (
                 <>
-                  <li>
+                  {/* <li>
                     <NavLink
                       className={
                         location.pathname.includes("book") ? "active" : ""
@@ -58,8 +62,8 @@ export const Navbar = () => {
                       {" "}
                       Author{" "}
                     </NavLink>
-                  </li>
-                  <li>
+                  </li> */}
+                  {/* <li>
                     <NavLink
                       to="/contact"
                       activeclassname="active"
@@ -70,8 +74,8 @@ export const Navbar = () => {
                       {" "}
                       Contact{" "}
                     </NavLink>
-                  </li>
-                  {isAdmin && (
+                  </li> */}
+                  {isAdmin && Boolean(isAdmin) && (
                     <li>
                       <NavLink
                         to="/admin/users"
@@ -84,12 +88,12 @@ export const Navbar = () => {
                       </NavLink>
                     </li>
                   )}
-                  <li>
+                  {/* <li>
                     <NavLink to="/profile" activeclassname="active">
                       {" "}
                       Profile{" "}
                     </NavLink>
-                  </li>
+                  </li> */}
                   <li>
                     <NavLink to="/reset-password"> Reset Password </NavLink>
                   </li>
@@ -98,6 +102,22 @@ export const Navbar = () => {
                       {" "}
                       <span className="tooltip-text ">Log Out</span>
                       <LogoutSVG height="22px" width="22px" />{" "}
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/profile" className="tooltip">
+                      {" "}
+                      <span className="tooltip-text ">{user?.userName}</span>
+                      <img
+                        className="nav-profile-image"
+                        src={`${
+                          user?.image?.url &&
+                          user?.image?.url?.includes("res.cloudinary.com")
+                            ? user?.image?.url
+                            : defaultImage
+                        }`}
+                        alt="profile image"
+                      />
                     </NavLink>
                   </li>
                 </>
@@ -122,7 +142,7 @@ export const Navbar = () => {
                     <NavLink to="/forget-password"> Forget Password </NavLink>
                   </li>
                   <li>
-                    <NavLink to="/login" className="tooltip">
+                    <NavLink to="/" className="tooltip">
                       {" "}
                       <span className="tooltip-text ">Sign In</span>
                       <LoginSVG height="22px" width="22px" />{" "}
